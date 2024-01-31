@@ -5,7 +5,7 @@ import Hero from 'components/hero'
 const Home = () => {
   return (
     <Container>
-    <Meta />
+      <Meta />
       <Hero title='CUBE' subtitle='アウトプットしていくサイト' imageOn />
     </Container>
   )
