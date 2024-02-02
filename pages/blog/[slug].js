@@ -61,8 +61,15 @@ const Schedule = ({
   )
 }
 
-export async function getStaticProps () {
-  const slug = 'micro'
+export async function getStaticPaths () {
+  return {
+    paths: ['/blog/schedule', '/blog/music', '/blog/micro'],
+    fallback: false
+  }
+}
+
+export async function getStaticProps (context) {
+  const slug = context.params.slug
   const post = await getPostBySlug(slug)
   const description = extractText(post.content)
   const eyecatch = post.eyecatch ?? eyecatchLocal
