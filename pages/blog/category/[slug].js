@@ -1,11 +1,15 @@
-import { getAllcategories } from 'lib/api'
+import { getAllcategories, getAllPostsByCategory } from 'lib/api'
 import Container from 'components/container'
 import PostHeader from 'components/post-header'
+import Posts from 'components/posts'
+import { getPlaiceholder } from 'plaiceholder'
+import { eyecatchLocal } from 'lib/constants'
 
-const Category = ({ name }) => {
+const Category = ({ name, posts }) => {
   return (
     <Container>
       <PostHeader title={name} subtitle='Blog Category' />
+      <Posts posts={posts} />
     </Container>
   )
 }
@@ -22,10 +26,19 @@ const getStaticProps = async context => {
   const catSlug = context.params.slug
   const allCats = await getAllcategories()
   const cat = allCats.find(({ slug }) => slug === catSlug)
+  const posts = await getAllPostsByCategory(cat.id)
+  for (const post of posts) {
+    if (!Object.prototype.hasOwnProperty.call(post, 'eyecatch')) {
+      post.eyecatch = eyecatchLocal
+    }
+    const { base64 } = await getPlaiceholder(post.eyecatch.url)
+    post.eyecatch.blurDataURL = base64
+  }
 
   return {
     props: {
-      name: cat.name
+      name: cat.name,
+      posts
     }
   }
 }
